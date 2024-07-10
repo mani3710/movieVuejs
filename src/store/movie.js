@@ -5,7 +5,10 @@ const MoviesStore = {
       pageSize:15,
       currentPage:1,
       recentMovieList:[],
-      loader:false
+      loader:false,
+      selectedMovieDetails:{},
+      selectedMovieLoader:false,
+      suggestionMovieList:[]
     },
     mutations: { 
         setRecentMovieList(state,action){
@@ -18,7 +21,16 @@ const MoviesStore = {
         },
         setLoader(state,action){
           state.loader = action;
-        }
+        },
+        setSelectedMovieLoader(state,action){
+          state.selectedMovieLoader = action;
+        },
+        setSelectedMovieDetails(state,action){
+          state.selectedMovieDetails = action.movie;
+        },
+        setSuggestionMovieList(state,action){
+          state.suggestionMovieList = action.movies;
+        },
 
     }, 
     actions: { 
@@ -39,7 +51,19 @@ const MoviesStore = {
             console.log("appendRecentList res",res.data?.data);
              store.commit("appendRecentList",  res.data?.data );
              store.commit('setLoader',false);
-        }
+        },
+        async getSpecificMovieDetails(store,action){
+          
+          store.commit('setSelectedMovieLoader',true);
+           console.log(action, "aassa")
+          const res = await API.get(`/movie_details.json?movie_id=${action}`);
+           console.log("setSelectedMovieDetails res",res.data?.data);
+           store.commit("setSelectedMovieDetails",  res.data?.data );
+           const resSuggestion = await API.get(`/movie_suggestions.json?movie_id=${action}`);
+           store.commit("setSuggestionMovieList",  resSuggestion.data?.data );
+           console.log("resSuggestion res",resSuggestion.data?.data);
+           store.commit('setSelectedMovieLoader',false);
+      }
      },
     getters: {  }
   }

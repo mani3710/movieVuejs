@@ -29,7 +29,7 @@
            </div>
            <div class="movieDetailsInnerContainer">
               <button
-              @click="movetoMoveiDetails(movie.title_long)"
+              @click="movetoMoveiDetails(movie.id)"
               class="viewMoveDetailsStyle">View Details</button>
            </div>
         </div>
